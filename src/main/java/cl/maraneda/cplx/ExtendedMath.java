@@ -132,6 +132,7 @@ public class ExtendedMath {
      * @return the hyperbolic arccosine of num - arccosh(num) -, that is,
      * the natural logarithm of the sum between num and the square root of
      * the difference between num squared and 1
+     * @throws ArithmeticException if num is lower than 1
      * @see Math#sqrt(double)
      * @see Math#log(double)
      * @see Math#pow(double, double))
@@ -146,6 +147,8 @@ public class ExtendedMath {
      * @return the hyperbolic arctangent of num - arctanh(num) -, that is,
      * the half of the difference between the natural logarithm of 1 plus num
      * and the natural logarithm of 1 minus num
+     * @throws ArithmeticException if the absolute value of num is greater or
+     * equal than 1.
      * @see Math#log(double)
      */
     public static double atanh(double num){
@@ -192,5 +195,14 @@ public class ExtendedMath {
      */
     public static double acoth(double num){
         return (Math.log(1 + num) - Math.log(num - 1)) / 2;
+    }
+
+    /**
+     * Obtains the argument function of a real number
+     * @param num The real number whose argument function will be calculated
+     * @return zero if num is positive, the half of PI otherwise.
+     */
+    public static double arg(double num){
+        return num >= 0 ? 0 : Math.PI/2;
     }
 }

@@ -12,14 +12,15 @@ import java.util.Comparator;
  * @since 2026-06-01
  * @version 1.0
  */
-public class ImaginaryNumber implements MathResult{
+public class ImaginaryNumber implements MathResult, Comparable<ImaginaryNumber>{
+    /** Comparator used to check if one imaginary number is greater, equal or lower than other */
     public static final Comparator<ImaginaryNumber> IMAGINARY_NUMBER_COMPARATOR =
-            (i1, i2) -> Double.compare(i1.getImaginary(), i2.getImaginary());
+        Comparator.comparingDouble(ImaginaryNumber::getImaginary);
     protected double imaginary;
 
     /** Create an imaginary number with a numeric coefficient of num
      *
-     * @param num The numeric coefficient. It cannot be zero
+     * @param num The numeric coefficient. It cannot be zero, as zero is not an imaginary number.
      * @throws IllegalArgumentException if num is zero
      */
     public ImaginaryNumber(double num){
@@ -71,8 +72,23 @@ public class ImaginaryNumber implements MathResult{
         return super.hashCode();
     }
 
+    /** Compares two imaginary numbers through their numeric coefficients
+     *
+     * @param i1 The first imaginary number used to compare
+     * @param i2 The second imagianry number used to compare
+     * @return 1 if i1 is greater than i2, -1 if i2 is greater than i1, 0 if both are equal
+     */
     public static int compare(ImaginaryNumber i1, ImaginaryNumber i2){
         return IMAGINARY_NUMBER_COMPARATOR.compare(i1, i2);
+    }
+
+    /**
+     * Compares this ImaginaryNumber with other
+     * @param other The ImaginaryNumber this object is compared to
+     * @return 1 if this ImaginaryNumber is greater than other, -1 if other is greater than this, 0 if both are equal
+     */
+    public int compareTo(ImaginaryNumber other){
+        return compare(this, other);
     }
 
     @Override

@@ -2,6 +2,7 @@ package cl.maraneda.cplx;
 
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /** This class represents a complex number.
  *  According to the numeric sets theory, the complex numbers set represent
@@ -173,5 +174,89 @@ public class ComplexNumber extends ImaginaryNumber implements MathResult{
 
     public static int compare(ComplexNumber c1, ComplexNumber c2){
         return COMPLEX_NUMBER_COMPARATOR.compare(c1, c2);
+    }
+
+    public boolean isZero(){
+        return getRealAsDouble() == 0 && getImaginary() == 0;
+    }
+
+    public static ComplexNumber fromString(String str) {
+        if (str == null || str.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Cannot create complex number from null or empty string"
+            );
+        }
+
+        str = str.replaceAll("\\s+", "");
+
+        if (str.startsWith("+")) {
+            str = str.substring(1);
+        }
+
+        String regex =
+                "^(?:-?\\d+(?:\\.\\d+)?i|-?\\d+(?:\\.\\d+)?(?:[+-]\\d+(?:\\.\\d+)?i)?)$";
+
+        if (!Pattern.matches(regex, str)) {
+            throw new IllegalArgumentException(
+                    "The specified String does not represent a valid complex number"
+            );
+        }
+
+        // solo real
+        if (!str.contains("i")) {
+            return new ComplexNumber(
+                    Double.parseDouble(str),
+                    0
+            );
+        }
+
+        // solo imaginaria
+        if (!str.substring(1).contains("+")
+                && !str.substring(1).contains("-")) {
+
+            return new ComplexNumber(
+                    0,
+                    Double.parseDouble(
+                            str.substring(0, str.length() - 1)
+                    )
+            );
+        }
+
+        // buscar separador real/imaginaria
+        int split = -1;
+
+        for (int i = 1; i < str.length(); i++) {
+            char c = str.charAt(i);
+
+            if (c == '+' || c == '-') {
+                split = i;
+            }
+        }
+
+        double real =
+                Double.parseDouble(
+                        str.substring(0, split)
+                );
+
+        double imag =
+                Double.parseDouble(
+                        str.substring(split, str.length() - 1)
+                );
+
+        return new ComplexNumber(real, imag);
+    }
+
+    public static ComplexNumber fromOrderedPair(String str){
+        if (str == null || str.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Cannot create complex number from null or empty string"
+            );
+        }
+        Pattern p = Pattern.compile("^\\([+-]?\\d+(?:\\.\\d+)?,\\s*[+-]?\\d+(?:\\.\\d+)?\\)$");
+        if(!p.matcher(str).matches()){
+            throw new IllegalArgumentException("The specified String does not represent a valid ordered pair");
+        }
+        String[] nums = str.trim().substring(1, str.length() - 1).split(",", 2);
+        return new ComplexNumber(Double.parseDouble(nums[0].trim()), Double.parseDouble(nums[1].trim()));
     }
 }
