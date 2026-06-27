@@ -1,5 +1,6 @@
 package cl.maraneda.cplx;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -123,10 +124,10 @@ public class ComplexNumber extends ImaginaryNumber implements MathResult{
             return Double.toString(real.doubleValue());
         }
         return String.format(
-            "%f %s %fi",
-            real.doubleValue(),
+            "%s %s %si",
+            BigDecimal.valueOf(real.doubleValue()).stripTrailingZeros().toPlainString(),
             Math.signum(imaginary) < 0 ? "-" : "+",
-            Math.abs(imaginary));
+            BigDecimal.valueOf(Math.abs(imaginary)).stripTrailingZeros().toPlainString());
     }
 
     /** Compares this complex number with other object.

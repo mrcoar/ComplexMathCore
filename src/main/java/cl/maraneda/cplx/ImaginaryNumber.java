@@ -43,7 +43,13 @@ public class ImaginaryNumber implements MathResult, Comparable<ImaginaryNumber>{
      * @return the String representing the imaginary number
      */
     public String toString(){
-        return imaginary + "i";
+        if(imaginary == 1){
+            return "i";
+        }
+        if(imaginary == -1){
+            return "-i";
+        }
+        return  imaginary + "i";
     }
 
     /** Compares this imaginary number with other object.
@@ -99,5 +105,25 @@ public class ImaginaryNumber implements MathResult, Comparable<ImaginaryNumber>{
     @Override
     public boolean isImaginary(){
         return true;
+    }
+
+    public static ImaginaryNumber fromString(String str){
+        if(str == null || str.isBlank()){
+            throw new IllegalArgumentException("The specified string cannot be null or empty");
+        }
+        if(str.trim().equals("i")){
+            return new ImaginaryNumber(1);
+        }
+        if(str.trim().equals("-i")){
+            return new ImaginaryNumber(-1);
+        }
+        if(str.endsWith("i")) try{
+            return new ImaginaryNumber(Double.parseDouble(str.substring(0, str.length() - 1)));
+        }catch(NumberFormatException _){
+            throw new IllegalArgumentException("The specified string (" + str + " is not a valid imaginary number");
+        }else{
+            throw new IllegalArgumentException("The specified string is not an imaginary number at all");
+        }
+
     }
 }

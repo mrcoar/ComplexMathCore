@@ -91,6 +91,42 @@ public class ImaginaryMath {
     }
 
     /**
+     * Raises one imaginary number to the power of other imaginary number.<br>
+     * The result of this operation is a complex number that results from raise
+     * E to the power of the product between the exp and the natural logarithm
+     * of the base.<br>
+     * As the natural logarithm of an imaginary number can have an infinite number
+     * of values, an integer k must be specified to indicate that the kth value
+     * of that logarithm must be used for the calculation.
+     * @param base The imaginary base
+     * @param exp The imaginary exponent
+     * @param k An integer to indicate that the kth value of the natural 
+     *          logarithm of the base will be used.
+     * @return the base raised to the power of the exponent as described above.
+     * @throws NullPointerException if the base and/or the exponent are null.
+     * @see #log(ImaginaryNumber, int) 
+     * @see ComplexMath#multiply(ComplexNumber...) 
+     * @see ComplexMath#exp(ComplexNumber)
+     */
+    public static ComplexNumber pow(ImaginaryNumber base, ImaginaryNumber exp, int k){
+        return ComplexMath.exp(ComplexMath.multiply(new ComplexNumber(exp), log(base, k)));
+    }
+
+    /**
+     * Raises one imaginary number to the power of other imaginary number and
+     * returns its principal value.<br>
+     * Calling this method is the same as calling pow(base, exp, 0)
+     * @param base The imaginary base
+     * @param exp The imaginary exponent
+     * @return the base raised to the power of the exponent as described above.
+     * @throws NullPointerException if the base and/or the exponent are null.
+     * @see #pow(ImaginaryNumber, ImaginaryNumber, int)
+     */
+    public static ComplexNumber pow(ImaginaryNumber base, ImaginaryNumber exp){
+        return pow(base, exp, 0);
+    }
+
+    /**
      * Calculates the sum of two or more imaginary numbers.
      * The result of this will be always an imaginary number whose numeric
      * coefficient will be the sum of the numeric coefficients of each
@@ -176,7 +212,7 @@ public class ImaginaryMath {
      */
     public static MathResult multiply(ImaginaryNumber... ops){
         if(ops == null || ops.length < 2){
-            throw new IllegalArgumentException("Se requiere al menos dos factores");
+            throw new IllegalArgumentException("At least 2 imaginary factors are required");
         }
         DoubleAccumulator da = new DoubleAccumulator((f1, f2) -> f1 * f2, ops[0].getImaginary());
         IntStream.range(1, ops.length).forEach(i ->
@@ -245,14 +281,25 @@ public class ImaginaryMath {
             }
             return multiply(iops);
         }
-        if(rops.length + iops.length == 0){
+
+        if(rops.length + iops.length < 2){
             throw new IllegalArgumentException("At least 2 operands must be among real and imaginary numbers");
         }
+
+        if(iops.length == 1 && rops.length == 1){
+            return multiply(rops[0], iops[0]);
+        }
+
         da = new DoubleAccumulator(dbo, rops[0]);
         IntStream.range(1, rops.length).forEach(i -> da.accumulate(rops[i]));
         double coef = da.get();
+
+        if(iops.length == 1){
+            return multiply(coef, iops[0]);
+        }
+
         MathResult mr = multiply(iops);
-        if(mr instanceof  RealNumber rn){
+        if(mr instanceof RealNumber rn){
             return new RealNumber(rn.doubleValue() * coef);
         }
         return new ImaginaryNumber(mr.toImaginary().getImaginary() * coef);
@@ -280,6 +327,9 @@ public class ImaginaryMath {
      * @throws ArithmeticException if n is zero.
      */
     public static ImaginaryNumber divide(ImaginaryNumber in, double n){
+        if(n == 0){
+            throw new ArithmeticException("The real number cannot be zero");
+        }
         return new ImaginaryNumber(in.getImaginary() / n);
     }
 
@@ -394,19 +444,26 @@ public class ImaginaryMath {
      * @throws ArithmeticException if n is zero
      * @see #pow(ImaginaryNumber, int) 
      * @see #exp(ImaginaryNumber)
-     * @see ComplexMath#conjugate(ComplexNumber) 
+     * @see #sgn(ImaginaryNumber)
+     * @see ComplexMath#conjugate(ComplexNumber)
      * @see Math#pow(double, double)
      * @see Math#PI
-     * @see Math#signum(double) 
      */
     public static List<ComplexNumber> nrt(ImaginaryNumber in, int n){
+        if(n == 0){
+            throw new ArithmeticException("The number of roots cannot be zero");
+        }
+        if(n == 1){
+            return List.of(new ComplexNumber(in));
+        }
         if(n < 0){
             return nrt(pow(in, -1).toImaginary(), Math.abs(n));
         }
         double num = Math.pow(Math.abs(in.getImaginary()), 1d/n);
+        double t = arg(in);
         List<ComplexNumber> roots = new ArrayList<>();
         IntStream.range(0, n).forEach(k -> {
-            double fact = 2 * Math.PI * (k + (Math.signum(in.getImaginary()) / 4)) / n;
+            double fact = (t + 2 * Math.PI * k) / n;
             roots.add(ComplexMath.ponderate(exp(new ImaginaryNumber(fact)), num));
         });
         return roots;

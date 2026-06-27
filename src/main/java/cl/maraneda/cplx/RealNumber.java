@@ -138,4 +138,8 @@ public class RealNumber extends Number implements MathResult, Comparable<RealNum
     public int compareTo(RealNumber r){
         return compare(this, r);
     }
+
+    public String toString(){
+        return String.valueOf(real);
+    }
 }
