@@ -152,6 +152,9 @@ public class ExtendedMath {
      * @see Math#log(double)
      */
     public static double atanh(double num){
+        if(Math.abs(num) >= 1){
+            throw new ArithmeticException("The absolute value of the argument of the hyperbolic arctangent must be lower than 1");
+        }
         return (Math.log(1 + num) - Math.log(1 - num)) / 2;
     }
 

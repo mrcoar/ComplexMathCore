@@ -545,7 +545,7 @@ public class ImaginaryMath {
      * @see #tan(ImaginaryNumber)
      */
     public static ImaginaryNumber cot(ImaginaryNumber in){
-        return new ImaginaryNumber(-1 / Math.tanh(in.getImaginary()));
+        return new ImaginaryNumber(-1 * ExtendedMath.coth(in.getImaginary()));
     }
 
     /** Calculates the hyperbolic sine of an imaginary number.<br>
@@ -688,10 +688,9 @@ public class ImaginaryMath {
     }
 
     /** Calculates the arcsecant of an imaginary number.<br>
-     * For an imaginary number b = ai, with "a" distinct of zero, this results in
-     * a complex number whose real part is the half of PI and the imaginary part
-     * is the hyperbolic arcsine of the multiplicative inverse of the numeric
-     * coefficient of the imaginary number.
+     * For an imaginary number b = ai, with a &ne; 0, this results in
+     * a complex number whose real part is &pi;/2 and the imaginary part
+     * is the hyperbolic arcsine of the multiplicative inverse of "a".
      * @param in The imaginary number whose arcsecant will be calculated.
      * @return The arcsecant of in as described above
      * @throws NullPointerException if in is null
@@ -789,7 +788,7 @@ public class ImaginaryMath {
      * @see ExtendedMath#asinh(double)
      */
     public static ComplexNumber asech(ImaginaryNumber in){
-        return new ComplexNumber(ExtendedMath.asinh(1 / in.getImaginary()), Math.PI / 2);
+        return new ComplexNumber(-ExtendedMath.asinh(1 / in.getImaginary()), Math.PI / 2);
     }
 
     /** Calculates the hyperbolic arccosecant of an imaginary number.<br>
@@ -905,6 +904,7 @@ public class ImaginaryMath {
 /** Calculates the "bi" base logarithm of a real number, where i is the imaginary
     unit.<br>
     Using this method will allow to obtain the principal value of the logarithm.
+    That is, it's equivalent to call logI(num, base, 0).
   * @param num The real number whose base bi logarithm is calculated
   * @param base the base used to calculate the logarithm
   * @return The principal value of the bi logarithm of num, as described above.
@@ -916,7 +916,7 @@ public class ImaginaryMath {
         return logI(num, base, 0);
     }
 
-    /** Calculates the b base logarithm of an imaginary number ai.<br>
+    /** Calculates the b base logarithm of an imaginary number bi.<br>
      * This kind of logarithm has an infinite amount of solutions. For this reason,
      * a third parameter consisting in the kth value of the logarithm must be
      * specified.
@@ -927,7 +927,7 @@ public class ImaginaryMath {
      *     of b</li>
      *     <li>The imaginary part is the result of PI * (0,5 + (2 * k))</li>
      *     <li>The complex number that results of summing both parts is
-     *    ponderated by the multiplicative inverse of the natural logarithm of b
+     *    ponderate by the multiplicative inverse of the natural logarithm of b
      *    </li>
      *    </ul>
      * If you wish to obtain the principal value of the logarithm, make k's value

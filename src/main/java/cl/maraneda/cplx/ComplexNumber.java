@@ -29,8 +29,8 @@ public class ComplexNumber extends ImaginaryNumber implements MathResult{
      * @param imaginary the imaginary part of the new complex number
      */
     public ComplexNumber(RealNumber real, double imaginary){
-        super(imaginary);
         this.real = real;
+        this.imaginary = imaginary;
     }
 
     /** Create a complex number from a real number and the numeric coefficient

@@ -18,6 +18,11 @@ public class ImaginaryNumber implements MathResult, Comparable<ImaginaryNumber>{
         Comparator.comparingDouble(ImaginaryNumber::getImaginary);
     protected double imaginary;
 
+    /** Creates an imaginary number representing the imaginary unit */
+    public ImaginaryNumber(){
+        this(1);
+    }
+
     /** Create an imaginary number with a numeric coefficient of num
      *
      * @param num The numeric coefficient. It cannot be zero, as zero is not an imaginary number.
